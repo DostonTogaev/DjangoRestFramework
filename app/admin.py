@@ -1,6 +1,9 @@
-from django.contrib import admin
-from app.models import *
-# Register your models here.
 
-admin.site.register(Category)
+from django.contrib import admin
+from app.models import Category, Image
+
+@admin.register(Category)
+class CategoryModelAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('title',)}
+
 admin.site.register(Image)

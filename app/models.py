@@ -1,27 +1,57 @@
 from django.db import models
-
+from django.utils.text import slugify
+from django.contrib.auth.models import User
 # Create your models here.
 
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
 
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.FloatField()
-    slug = models.SlugField()
-    group = models.ForeignKey('Group', on_delete=models.CASCADE)
+    slug = models.SlugField( blank=True)
+    group = models.ForeignKey('Group', on_delete=models.CASCADE, related_name='products')
+    is_liked = models.ManyToManyField(User, related_name='liked_products', blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
     
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='images/category')
+    slug = models.SlugField( blank=True)
+    image = models.ImageField(upload_to='media/images/category/')
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        
+        super(Category, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = 'Categories'
 
 class Group(models.Model):
     name = models.CharField(max_length=25)
-    slug = models.SlugField()
-    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='group')
-    image = models.ForeignKey('Image', on_delete=models.CASCADE, related_name='group')
-    
+    slug = models.SlugField( blank=True)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='groups')
+    image = models.ImageField(upload_to='media/images/group/')    
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
 
 class Image(models.Model):
     image = models.ImageField(upload_to='images/')
@@ -41,7 +71,7 @@ class Comment(models.Model):
     message = models.TextField()
     file = models.FileField(upload_to='media/comments')
     product = models.ForeignKey('Product', on_delete = models.CASCADE, related_name = 'comments')
-    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments' )
 
 class Attribute_Key(models.Model):
     key_name = models.CharField(max_length=50)

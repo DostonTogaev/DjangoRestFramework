@@ -20,6 +20,7 @@ from django.urls.conf import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('api-auth/', include('rest_framework.urls')),
-    path('', include('app.urls')),
+    path('olcha-uz/', include('app.urls')),
+    path('api-auth/', include('rest_framework.urls')),
+    
 ]
