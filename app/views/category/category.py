@@ -3,10 +3,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from app.models import  Category
 from app.serialaizer import CategorySerializer
+from rest_framework import generics
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView, ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView, RetrieveUpdateDestroyAPIView
 
 
-'''class CategiryAPIView(APIView):
+'''class CategiryApiView(APIView):
     
     def get(self, request):
         category_data = [{
@@ -17,16 +18,24 @@ from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
         for category in Category.objects.all()]     
         return Response (category_data, status=status.HTTP_200_OK)'''
 
-'''class CategoryListAPIView(APIView):
+class CategoryListApiView(APIView):
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)'''
-class CategoryListApiView(ListAPIView):
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+'''class CategoryListApiView(ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer '''
+    
+class CategoryDetailApiView(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    
 
+    def get_object(self):
+        slug = self.kwargs.get('slug')
+        return generics.get_object_or_404(Category, slug=slug)
 
 '''class CategoryDetailApiView(APIView):
     def get(self,request,slug):
@@ -35,10 +44,10 @@ class CategoryListApiView(ListAPIView):
         return Response(serialazer.data, status=status.HTTP_200_OK)'''
 
 
-class CategoryDetailApiView(RetrieveAPIView):
+'''class CategoryDetailApiView(RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    lookup_field = 'slug'
+    lookup_field = 'slug'''
 
 '''class CategoryCreatedApiView(APIView):
 
