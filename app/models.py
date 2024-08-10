@@ -23,7 +23,8 @@ class Product(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
-    
+    def __str__(self):
+        return self.name
 
 class Category(models.Model):
     title = models.CharField(max_length=100)
@@ -58,6 +59,7 @@ class Group(models.Model):
         return self.name
 
 class Image(models.Model):
+    is_primary = models.BooleanField(default=False)
     image = models.ImageField(upload_to='images/')
     product = models.ForeignKey('Product',on_delete=models.CASCADE, related_name='images')
     
@@ -73,20 +75,25 @@ class Comment(models.Model):
 
     rating = models.CharField(max_length=100, choices=RatingChoice.choices, default=RatingChoice.One.value )
     message = models.TextField()
-    file = models.FileField(upload_to='media/comments')
-    product = models.ForeignKey('Product', on_delete = models.CASCADE, related_name = 'comments')
+    file = models.FileField(upload_to='media/comments', null=True, blank=True)
+    product = models.ForeignKey('Product', on_delete = models.CASCADE, related_name = 'comment')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments' )
 
-class Attribute_Key(models.Model):
-    key_name = models.CharField(max_length=50)
 
+class Attribute_Key(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
 
 class Attribute_Value(models.Model):
-    value_name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
 
 class Attribute(models.Model):
     key = models.ForeignKey('Attribute_Key', on_delete=models.CASCADE)
     value= models.ForeignKey('Attribute_Value', on_delete=models.CASCADE)
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='attributes')
 
