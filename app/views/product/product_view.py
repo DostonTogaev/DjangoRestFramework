@@ -6,12 +6,16 @@ from rest_framework.views import APIView
 from app.serialaizer import ProductSerializer, CommentSerializer, AttributeSerializer
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAdminUser
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class ProductListApiView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get_queryset(self):
         category_slug = self.kwargs['category_slug']
         group_slug = self.kwargs['group_slug']
@@ -70,12 +74,5 @@ class ProductDetailApiView(RetrieveAPIView):
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
-class ProductAttributwApiView(RetrieveAPIView):
-    queryset = Attribute.objects.all()
-    serializer_class = AttributeSerializer
-    
-    def get_queryset(self):
-        product_slug = self.kwargs['product_slug']
-        queryset = Product.objects.filter( product__slug = product_slug)
-        return queryset
+
     

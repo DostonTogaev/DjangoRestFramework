@@ -19,11 +19,14 @@ from django.urls import path
 from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from rest_framework.authtoken import views
+from config import custom_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('olcha-uz/', include('app.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('api-token-auth/', custom_token.CustomAuthToken.as_view()),
+  
     
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

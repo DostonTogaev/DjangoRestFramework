@@ -1,7 +1,9 @@
 
 from django.contrib import admin
 from app.models import Category, Image, Group, Product, Comment, Attribute, Attribute_Key, Attribute_Value
+from rest_framework.authtoken.admin import TokenAdmin
 
+TokenAdmin.raw_id_fields = ['user']
 @admin.register(Category)
 class CategoryModelAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}

@@ -4,8 +4,9 @@ from app.views.category.category import  CategoryListApiView, CategoryDetailApiV
 
 from app.views.group.groups import GroupListApiView, GroupCreateApiview, GroupDetailApi
 
-from app.views.product.product_view import ProductListApiView, ProductCreatedApiView, ProductDetailApiView, ProductDeleteApiView, ProductUpdateApiView, ProductAttributwApiView
+from app.views.product.product_view import ProductListApiView, ProductCreatedApiView, ProductDetailApiView, ProductDeleteApiView, ProductUpdateApiView
 
+from app.views.auth.auth_view import UserLoginAPIView, UserLogoutAPIView, UserRegisterAPIView
 urlpatterns = [
 
     #category
@@ -27,7 +28,15 @@ urlpatterns = [
     path('product/<slug:slug>/edit/', ProductUpdateApiView.as_view()),
 
     path('product/view/<slug:slug>/',ProductDetailApiView.as_view()),
-    path('product/view/<slug:product_slug>/attri/',ProductAttributwApiView.as_view()),
+
+
+    path('login/', UserLoginAPIView.as_view()),
+    path('logout/', UserLogoutAPIView.as_view()),
+    path('register/', UserRegisterAPIView.as_view()),
+
+
+
+ 
 
 
 ]

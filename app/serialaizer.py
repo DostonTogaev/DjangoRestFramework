@@ -3,6 +3,15 @@ from rest_framework import serializers
 from app.models import Category, Group, Product, Comment, Image, Attribute
 from django.db.models import Avg
 from django.db.models.functions import Round
+from django.contrib.auth.models import User
+from rest_framework.exceptions import ValidationError
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
 
 class CategorySerializer(ModelSerializer):
     image = serializers.ImageField(required=False)
@@ -107,3 +116,44 @@ class AttributeSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length = 100, required=True)
+    password = serializers.CharField(max_length = 100, required=True)
+
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(max_length=100, required=True)
+    first_name = serializers.CharField(max_length=100, required=False)
+    last_name = serializers.CharField(max_length=100, required=False)
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=100, write_only=True, required=True)
+    password2 = serializers.CharField(max_length=100, write_only=True, required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'password2')
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise ValidationError({"detail": "User already exists!"})
+        return value
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise ValidationError({"password2": "Passwords must match!"})
+
+        if User.objects.filter(email=data['email']).exists():
+            raise ValidationError({"email": "Email already taken!"})
+
+        return data
+
+    def create(self, validated_data):
+        # Remove the password2 field
+        validated_data.pop('password2', None)
+        password = validated_data.pop('password')
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+    
