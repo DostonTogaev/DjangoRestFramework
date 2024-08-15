@@ -20,13 +20,25 @@ from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.authtoken import views
-from config import custom_token
+from config import custom_token, custom_obtain_views
+from rest_framework_simplejwt.views import TokenBlacklistView
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('olcha-uz/', include('app.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', custom_token.CustomAuthToken.as_view()),
-  
+    path('api/token/', custom_obtain_views.MyTokenObtain.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/blacklist/', TokenBlacklistView.as_view(), name='token_blacklist'),
+
+    path('logout/', custom_obtain_views.LogoutAPIView.as_view()),
+    path('register/', custom_obtain_views.RegisterAPIView.as_view())
+
     
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

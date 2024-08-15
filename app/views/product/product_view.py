@@ -8,12 +8,13 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpda
 from rest_framework.permissions import IsAdminUser
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class ProductListApiView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
