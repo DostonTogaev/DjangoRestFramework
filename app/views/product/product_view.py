@@ -7,15 +7,16 @@ from app.serialaizer import ProductSerializer, CommentSerializer, AttributeSeria
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from app.permissions import CustomPermissions
 
 
 class ProductListApiView(ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [JWTAuthentication]
+    permission_classes = [CustomPermissions]
     
     def get_queryset(self):
         category_slug = self.kwargs['category_slug']
@@ -71,6 +72,7 @@ class ProductUpdateApiView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 class ProductDetailApiView(RetrieveAPIView):
+    permission_classes = [CustomPermissions]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'slug'

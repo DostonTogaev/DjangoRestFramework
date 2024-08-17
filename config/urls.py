@@ -31,6 +31,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('olcha-uz/', include('app.urls')),
+    path('post/', include('post.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', custom_token.CustomAuthToken.as_view()),
     path('api/token/', custom_obtain_views.MyTokenObtain.as_view(), name='token_obtain_pair'),

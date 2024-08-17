@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'post',
     'rest_framework_simplejwt',
     'rest_framework',
     'rest_framework.authtoken',
@@ -133,10 +134,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework.authentication.TokenAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
+    #'DEFAULT_AUTHENTICATION_CLASSES': [
+    #    #'rest_framework.authentication.TokenAuthentication',
+    #    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    #],
 
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
