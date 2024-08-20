@@ -23,6 +23,7 @@ class CategoryListApiView(APIView):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
 
 '''class CategoryListApiView(ListAPIView):
@@ -63,7 +64,7 @@ class CategoryCreatedApiView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-
+    
 '''class CategoryUpdateApiView(APIView):
     def get(self, request, slug):
         category = Category.objects.get(slug=slug)

@@ -11,6 +11,10 @@ class GroupListApiView(ListAPIView):
     serializer_class = GroupSerializer
     lookup_field = 'slug'
 
+    def get_queryset(self):
+        queryset = Group.objects.select_related('category')
+        return queryset
+
 class GroupCreateApiview(ListCreateAPIView):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer

@@ -13,6 +13,10 @@ class PostApiView(ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    def get_queryset(self):
+        queryset = Post.objects.select_related('author').prefetch_related('tags')
+        return queryset 
+
 class PostModelSet(APIView):
     def get(self, request):
         posts = Post.objects.all()

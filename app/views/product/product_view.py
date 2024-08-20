@@ -21,9 +21,11 @@ class ProductListApiView(ListAPIView):
     def get_queryset(self):
         category_slug = self.kwargs['category_slug']
         group_slug = self.kwargs['group_slug']
-        queryset = Product.objects.filter(group__category__slug = category_slug, group__slug = group_slug)
+        queryset = Product.objects.filter(group__category__slug = category_slug, group__slug = group_slug).select_related('proup').prefetch_related('comment')
+        
         return queryset
 
+    
     
 class ProductCreatedApiView(APIView):
     

@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from rest_framework.authtoken import views
 from config import custom_token, custom_obtain_views
 from rest_framework_simplejwt.views import TokenBlacklistView
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -43,3 +44,5 @@ urlpatterns = [
 
     
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += debug_toolbar_urls()
